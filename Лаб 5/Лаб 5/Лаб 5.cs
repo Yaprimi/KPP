@@ -19,15 +19,15 @@ class Program
 
 public interface IProductContainer
 {
-    void Add(Product item); // Додає в кінець (вже було)
-    void AddToBeginning(Product item); // Додає на початок
-    void InsertAt(int index, Product item); // Додає за індексом
-    void RemoveAt(int index); // Вже було
-    void OrderByPrice(); // Вже було
-    Product this[int index] { get; set; } // Вже було
+    void Add(Product item);
+    void AddToBeginning(Product item);
+    void InsertAt(int index, Product item);
+    void RemoveAt(int index);
+    void OrderByPrice();
+    Product this[int index] { get; set; }
     Product[] this[decimal price] { get;set; }
     Product this[string name] { get; set; }
-    int Count { get; } // Вже було
+    int Count { get; }
     void OrderBy(ProductSortField sortField);
 
 }

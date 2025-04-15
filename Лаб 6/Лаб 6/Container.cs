@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Лаб_4
 {
-    public class Container : IProductContainer
+    public class Container : ProductContainerBase
     {
         private Product[] items;
         private int count;
@@ -17,7 +17,7 @@ namespace Лаб_4
             count = 0;
         }
 
-        public void AddToBeginning(Product item)
+        public override void AddToBeginning(Product item)
         {
             if (count == items.Length)
             {
@@ -33,7 +33,7 @@ namespace Лаб_4
             count++;
         }
 
-        public void InsertAt(int index, Product item)
+        public override void InsertAt(int index, Product item)
         {
             if (index < 0 || index > count)
             {
@@ -54,7 +54,7 @@ namespace Лаб_4
             count++;
         }
 
-        public void Add(Product item)
+        public override void Add(Product item)
         {
             if (count == items.Length)
             {
@@ -64,28 +64,43 @@ namespace Лаб_4
             count++;
         }
 
-        public void RemoveAt(int index)
+        public override void RemoveAt(int index)
         {
             if (index < 0 || index >= count)
             {
-                throw new IndexOutOfRangeException("Index is out of range");
+                throw new ProductNotFoundException(
+                    $"Індекс {index + 1} виходить за межі діапазону (1.. {count})",
+                    null,
+                    "Remove at index");
             }
 
-            for (int i = index; i < count - 1; i++)
+            try
             {
-                items[i] = items[i + 1];
+                Product removedProduct = items[index];
+
+                for (int i = index; i < count - 1; i++)
+                {
+                    items[i] = items[i + 1];
+                }
+
+                items[count - 1] = null;
+                count--;
+
+                if (count > 0 && count == items.Length / 4)
+                {
+                    Resize(items.Length / 2);
+                }
             }
-
-            items[count - 1] = null;
-            count--;
-
-            if (count > 0 && count == items.Length / 4)
+            catch (Exception ex)
             {
-                Resize(items.Length / 2);
+                throw new InvalidProductOperationException(
+                    "Помилка при видаленні елементу з масиву",
+                    index < items.Length ? items[index] : null,
+                    "Remove at index");
             }
         }
 
-        public void OrderByPrice()
+        public override void OrderByPrice()
         {
             for (int i = 0; i < count - 1; i++)
             {
@@ -101,7 +116,7 @@ namespace Лаб_4
             }
         }
 
-        public void OrderBy(ProductSortField sortField)
+        public override void OrderBy(ProductSortField sortField)
         {
             for (int i = 0; i < count - 1; i++)
             {
@@ -131,15 +146,6 @@ namespace Лаб_4
                 }
             }
         }
-        public int GetPublicationTypeOrder(Product product)
-        {
-            return product switch
-            {
-                Book => 1,
-                Magazine => 2,
-                _ => 3
-            };
-        }
 
         public override string ToString()
         {
@@ -163,40 +169,40 @@ namespace Лаб_4
             items = newArray;
         }
 
-        public Product this[int index]
+        public override Product this[int index]
         {
             get
             {
                 if (index < 0 || index >= count)
-                    throw new IndexOutOfRangeException($"Індекс {index} виходить за межі діапазону (0..{count - 1})");
+                    throw new ProductNotFoundException($"Індекс {index + 1} виходить за межі діапазону (1.. {count})", null, "Container index access");
                 return items[index];
             }
             set
             {
                 if (index < 0 || index >= count)
-                    throw new IndexOutOfRangeException($"Індекс {index} виходить за межі діапазону (0..{count - 1})");
+                    throw new ProductNotFoundException($"Індекс {index + 1} виходить за межі діапазону (1.. {count})", value, "Container index assignment");
                 if (value == null)
                     throw new ArgumentNullException(nameof(value), "Продукт не може бути null");
                 items[index] = value;
             }
         }
 
-        public Product this[string name]
+        public override Product this[string name]
         {
             get
             {
                 if (string.IsNullOrEmpty(name))
-                    throw new ArgumentException("Назва не може бути порожньою");
+                    throw new InvalidProductOperationException("Назва не може бути порожньою", null, "Product search by name");
 
                 var product = items.FirstOrDefault(p => p?.Name.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
                 if (product == null)
-                    throw new KeyNotFoundException($"Продукт з назвою '{name}' не знайдено");
+                    throw new ProductNotFoundException($"Продукт з назвою '{name}' не знайдено", null, "Product search by name");
                 return product;
             }
             set
             {
                 if (string.IsNullOrEmpty(name))
-                    throw new ArgumentException("Назва не може бути порожньою");
+                    throw new InvalidProductOperationException("Назва не може бути порожньою", value, "Product update by name");
                 if (value == null)
                     throw new ArgumentNullException(nameof(value), "Продукт не може бути null");
 
@@ -212,11 +218,11 @@ namespace Лаб_4
                 }
 
                 if (!found)
-                    throw new KeyNotFoundException($"Продукт з назвою '{name}' не знайдено");
+                    throw new ProductNotFoundException($"Продукт з назвою '{name}' не знайдено", value, "Product update by name");
             }
         }
 
-        public Product[] this[decimal price]
+        public override Product[] this[decimal price]
         {
             get
             {
@@ -254,7 +260,7 @@ namespace Лаб_4
             }
         }
 
-        public Product[] GetAllByName(string name)
+        public  Product[] GetAllByName(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name cannot be null or empty");
@@ -269,6 +275,6 @@ namespace Лаб_4
             return matchingProducts.ToArray();
         }
 
-        public int Count => count;
+        public override int Count => count;
     }
 }

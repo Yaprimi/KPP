@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Лаб_4
 {
-    public class LinkedListContainer : IProductContainer
+    public class LinkedListContainer : ProductContainerBase
     {
         private class Node
         {
@@ -33,21 +33,36 @@ namespace Лаб_4
             count = 0;
         }
 
-        public Product this[int index]
+        public override Product this[int index]
         {
-            get => GetNodeAt(index).Data;
+            get
+            {
+                try
+                {
+                    return GetNodeAt(index).Data;
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    throw new ProductNotFoundException($"Індекс {index} виходить за межі діапазону (1..{count})", null, "LinkedList index access");
+                }
+            }
             set
             {
-                if (index < 0 || index >= count)
-                    throw new IndexOutOfRangeException($"Index {index} is out of range (0..{count - 1})");
                 if (value == null)
-                    throw new ArgumentNullException(nameof(value), "Product cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Продукт не може бути null");
 
-                GetNodeAt(index).Data = value;
+                try
+                {
+                    GetNodeAt(index).Data = value;
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    throw new ProductNotFoundException($"Індекс {index + 1} виходить за межі діапазону (1..{count})", value, "LinkedList index assignment");
+                }
             }
         }
 
-        public Product this[string name]
+        public override Product this[string name]
         {
             get
             {
@@ -86,7 +101,7 @@ namespace Лаб_4
             }
         }
 
-        public Product[] this[decimal price]
+        public override Product[] this[decimal price]
         {
             get
             {
@@ -131,7 +146,7 @@ namespace Лаб_4
             }
         }
 
-        public Product[] GetAllByName(string name)
+        public  Product[] GetAllByName(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException("Name cannot be null or empty");
@@ -148,7 +163,7 @@ namespace Лаб_4
             return matchingProducts.ToArray();
         }
 
-        public void Add(Product item)
+        public override void Add(Product item)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
@@ -168,7 +183,7 @@ namespace Лаб_4
             count++;
         }
 
-        public void AddToBeginning(Product item)
+        public override void AddToBeginning(Product item)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
@@ -188,10 +203,10 @@ namespace Лаб_4
             count++;
         }
 
-        public void InsertAt(int index, Product item)
+        public override void InsertAt(int index, Product item)
         {
             if (index < 0 || index > count)
-                throw new IndexOutOfRangeException("Index is out of range");
+                throw new IndexOutOfRangeException("Індекс знаходиться поза діапазоном");
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
@@ -218,32 +233,47 @@ namespace Лаб_4
             count++;
         }
 
-        public void RemoveAt(int index)
+        public override void RemoveAt(int index)
         {
             if (index < 0 || index >= count)
-                throw new IndexOutOfRangeException("Index is out of range");
+            {
+                throw new ProductNotFoundException(
+                    $"Індекс {index + 1} виходить за межі діапазону (1..{count})",
+                    null,
+                    "Remove at index");
+            }
 
             Node current = GetNodeAt(index);
 
-            if (current.Previous != null)
-                current.Previous.Next = current.Next;
-            else
-                head = current.Next;
+            try
+            {
+                if (current.Previous != null)
+                    current.Previous.Next = current.Next;
+                else
+                    head = current.Next;
 
-            if (current.Next != null)
-                current.Next.Previous = current.Previous;
-            else
-                tail = current.Previous;
+                if (current.Next != null)
+                    current.Next.Previous = current.Previous;
+                else
+                    tail = current.Previous;
 
-            count--;
+                count--;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidProductOperationException(
+                    "Помилка при видаленні вузла зі списку",
+                    current?.Data,
+                    "Remove at index");
+            }
         }
 
-        public void OrderByPrice()
+        public override void OrderByPrice()
         {
             OrderBy(ProductSortField.Price);
         }
 
-        public void OrderBy(ProductSortField sortField)
+        public override void OrderBy(ProductSortField sortField)
         {
             if (count <= 1) return;
 
@@ -282,17 +312,7 @@ namespace Лаб_4
             } while (swapped);
         }
 
-        private int GetPublicationTypeOrder(Product product)
-        {
-            return product switch
-            {
-                Book => 1,
-                Magazine => 2,
-                _ => 3
-            };
-        }
-
-        public int Count => count;
+        public override int Count => count;
 
         public override string ToString()
         {

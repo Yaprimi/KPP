@@ -11,7 +11,7 @@ namespace Лаб_4
 {
     class main_menu
     {
-        private static IProductContainer products = new Container();
+        private static ProductContainerBase products = new Container();
         public static void Main_menu()
         {
 
@@ -95,33 +95,58 @@ namespace Лаб_4
                     case 1:
                         AnsiConsole.Markup("[grey]Введіть індекс: [/]");
                         int index = int.Parse(Console.ReadLine());
-                        var productByIndex = products[index - 1];
-                        AnsiConsole.MarkupLine("[green]Знайдено продукт:[/]");
-                        DisplayProductDetails(productByIndex);
+                        try
+                        {
+                            var productByIndex = products[index - 1];
+                            AnsiConsole.MarkupLine("[green]Знайдено продукт:[/]");
+                            DisplayProductDetails(productByIndex);
+                        }
+                        catch (ProductNotFoundException ex)
+                        {
+                            AnsiConsole.MarkupLine($"[red]Помилка: {ex.Message}[/]");
+                        }
                         break;
                     case 2:
                         AnsiConsole.Markup("[grey]Введіть назву: [/]");
                         string name = Console.ReadLine();
-                        var productByName = products[name];
-                        AnsiConsole.MarkupLine("[green]Знайдено продукт:[/]");
-                        DisplayProductDetails(productByName);
+                        try
+                        {
+                            var productByName = products[name];
+                            AnsiConsole.MarkupLine("[green]Знайдено продукт:[/]");
+                            DisplayProductDetails(productByName);
+                        }
+                        catch (ProductNotFoundException ex)
+                        {
+                            AnsiConsole.MarkupLine($"[red]Помилка: {ex.Message}[/]");
+                        }
                         break;
                     case 3:
                         AnsiConsole.Markup("[grey]Введіть ціну: [/]");
                         decimal price = decimal.Parse(Console.ReadLine());
-                        var productsByPrice = products[price];
-                        AnsiConsole.MarkupLine($"[green]Знайдено продуктів: {productsByPrice.Length}[/]");
-                        foreach (var product in productsByPrice)
+                        try
                         {
-                            DisplayProductDetails(product);
-                            AnsiConsole.MarkupLine("──────────────────────────────");
+                            var productsByPrice = products[price];
+                            AnsiConsole.MarkupLine($"[green]Знайдено продуктів: {productsByPrice.Length}[/]");
+                            foreach (var product in productsByPrice)
+                            {
+                                DisplayProductDetails(product);
+                                AnsiConsole.MarkupLine("──────────────────────────────");
+                            }
+                        }
+                        catch (ProductNotFoundException ex)
+                        {
+                            AnsiConsole.MarkupLine($"[red]Помилка: {ex.Message}[/]");
                         }
                         break;
                 }
             }
+            catch (FormatException)
+            {
+                AnsiConsole.MarkupLine("[red]Невірний формат введених даних.[/]");
+            }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]Помилка пошуку:[/] {ex.Message}");
+                AnsiConsole.MarkupLine($"[red]Несподівана помилка: {ex.Message}[/]");
             }
         }
 
@@ -449,7 +474,7 @@ namespace Лаб_4
                 AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-2[/]: ");
             }
 
-            IProductContainer newContainer = choice == 1 ? new Container() : new LinkedListContainer();
+            ProductContainerBase newContainer = choice == 1 ? new Container() : new LinkedListContainer();
 
             for (int i = 0; i < products.Count; i++)
             {
@@ -471,21 +496,41 @@ namespace Лаб_4
             AnsiConsole.MarkupLine($"\n[green]Доступні індекси: 1-{products.Count}[/]");
             AnsiConsole.Markup("[grey]Введіть індекс продукту для видалення: [/]");
 
-            int index;
-            while (!int.TryParse(Console.ReadLine(), out index) || index < 1 || index > products.Count)
-            {
-                AnsiConsole.Markup($"[red]Некоректне введення.[/] Будь ласка, введіть число від [yellow]1 до {products.Count}[/]: ");
-            }
-
             try
             {
-                Product removedProduct = products[index - 1];
+                if (!int.TryParse(Console.ReadLine(), out int index))
+                {
+                    throw new InvalidProductOperationException("Введено некоректний формат індексу", null, "Remove product");
+                }
+
+                if (index < 1 || index > products.Count)
+                {
+                    throw new ProductNotFoundException(
+                        $"Індекс {index} виходить за межі діапазону (1-{products.Count})",
+                        null,
+                        "Remove product");
+                }
+
+                Product productToRemove = products[index - 1];
+
                 products.RemoveAt(index - 1);
-                AnsiConsole.MarkupLine($"[green]Продукт видалено:[/] {removedProduct.Name}");
+
+                AnsiConsole.MarkupLine($"[green]Продукт успішно видалений:[/] {productToRemove.Name}");
+            }
+            catch (ProductNotFoundException ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Помилка при видаленні:[/] {ex.Message}");
+                AnsiConsole.MarkupLine($"[grey]Деталі: спроба видалити продукт за неіснуючим індексом[/]");
+            }
+            catch (InvalidProductOperationException ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Помилка при введенні даних:[/] {ex.Message}");
+                AnsiConsole.MarkupLine("[grey]Будь ласка, введіть коректний номер індексу[/]");
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]Помилка при видаленні:[/] {ex.Message}");
+                AnsiConsole.MarkupLine($"[red]Несподівана помилка при видаленні:[/] {ex.Message}");
+                AnsiConsole.MarkupLine("[grey]Зверніться до розробника системи[/]");
             }
         }
 
