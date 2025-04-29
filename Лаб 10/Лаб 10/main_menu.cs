@@ -607,6 +607,72 @@ namespace Лаб_4
                 return;
             }
 
+            AnsiConsole.MarkupLine("\n[green]Оберіть спосіб виведення:[/]");
+            AnsiConsole.MarkupLine("[cyan]1.[/] Звичайний порядок");
+            AnsiConsole.MarkupLine("[magenta]2.[/] Зворотній порядок");
+            AnsiConsole.MarkupLine("[blue]3.[/] Фільтр за підрядком у назві");
+            AnsiConsole.MarkupLine("[yellow]4.[/] Відсортований порядок");
+            AnsiConsole.Markup("[grey]Введіть ваш вибір (1-4): [/]");
+
+            int displayChoice;
+            while (!int.TryParse(Console.ReadLine(), out displayChoice) || displayChoice < 1 || displayChoice > 4)
+            {
+                AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-4[/]: ");
+            }
+
+            IEnumerable<Product> itemsToDisplay = displayChoice switch
+            {
+                1 => products,
+                2 => products.GetReverseEnumerator(),
+                3 => GetFilteredProducts(),
+                4 => GetSortedProducts(),
+                _ => products
+            };
+
+            RenderProductsTable(itemsToDisplay);
+        }
+
+        private static IEnumerable<Product> GetFilteredProducts()
+        {
+            AnsiConsole.Markup("[grey]Введіть підрядок для пошуку в назві: [/]");
+            string substring = Console.ReadLine();
+            return products.FilterByNameSubstring(substring);
+        }
+
+        private static IEnumerable<Product> GetSortedProducts()
+        {
+            AnsiConsole.MarkupLine("\n[green]Оберіть поле для сортування:[/]");
+            AnsiConsole.MarkupLine("[cyan]1.[/] За ціною");
+            AnsiConsole.MarkupLine("[magenta]2.[/] За назвою");
+            AnsiConsole.MarkupLine("[blue]3.[/] За типом публікації");
+            AnsiConsole.Markup("[grey]Введіть ваш вибір (1-3): [/]");
+
+            int sortChoice;
+            while (!int.TryParse(Console.ReadLine(), out sortChoice) || sortChoice < 1 || sortChoice > 3)
+            {
+                AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-3[/]: ");
+            }
+
+            ProductSortField sortField = sortChoice switch
+            {
+                1 => ProductSortField.Price,
+                2 => ProductSortField.Name,
+                3 => ProductSortField.PublicationType,
+                _ => ProductSortField.Name
+            };
+
+            return products.GetOrderedEnumerator(sortField);
+        }
+
+
+        private static void RenderProductsTable(IEnumerable<Product> itemsToDisplay) {
+
+            if (!itemsToDisplay.Any())
+            {
+                AnsiConsole.MarkupLine("[yellow]Немає продуктів для відображення.[/]");
+                return;
+            }
+
             int rowNumber = 1;
             var table = new Table();
             table.Border = TableBorder.Rounded;
@@ -645,7 +711,7 @@ namespace Лаб_4
             table.AddColumn(new TableColumn("[bold blue]Спеціальність[/]").LeftAligned());
             table.AddColumn(new TableColumn("[bold grey]Рецензований[/]").LeftAligned());
 
-            foreach (var item in products)
+            foreach (var item in itemsToDisplay)
             {
                 string type = item switch
                 {
@@ -662,10 +728,9 @@ namespace Лаб_4
 
                 string price = "";
                 string name = $"[wheat1]{item.Name.EscapeMarkup()}[/]";
-                if (item is Product product) {
-                    price = $"[lime]{
-                        product.Price.ToString("C")
-                     }[/]"; 
+                if (item is Product product)
+                {
+                    price = $"[lime]{product.Price.ToString("C")}[/]";
                 }
                 string subcategory = "";
                 string publicationType = "";
@@ -789,6 +854,7 @@ namespace Лаб_4
             }
 
             AnsiConsole.Write(table);
+
         }
 
         private static string GetScientificValueColor(string value)
