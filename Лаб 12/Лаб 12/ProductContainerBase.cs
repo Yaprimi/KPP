@@ -10,6 +10,13 @@ namespace Лаб_4
 {
     public abstract class ProductContainerBase<T> : IEnumerable<T> where T : IName<T>
     {
+        public delegate int ComparisonDelegate(T x, T y);
+        public delegate bool PredicateDelegate(T item);
+
+        public abstract void Sort(ComparisonDelegate comparison);
+        public abstract T Find(PredicateDelegate predicate);
+        public abstract IEnumerable<T> FindAll(PredicateDelegate predicate);
+
         public abstract void Add(T item);
         public abstract void AddToBeginning(T item);
         public abstract void InsertAt(int index, T item);
@@ -28,10 +35,6 @@ namespace Лаб_4
 
         public abstract void SaveToBinaryFile(string filePath);
         public abstract void LoadFromBinaryFile(string filePath);
-
-        public abstract void Sort(Comparison<T> comparison);
-        public abstract T Find(Func<T, bool> predicate);
-        public abstract IEnumerable<T> FindAll(Func<T, bool> predicate);
 
         IEnumerator IEnumerable.GetEnumerator()
         {

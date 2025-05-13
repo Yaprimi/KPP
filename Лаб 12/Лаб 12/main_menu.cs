@@ -24,19 +24,20 @@ namespace Лаб_4
                 AnsiConsole.MarkupLine("[blue]3.[/] Переглянути всі продукти");
                 AnsiConsole.MarkupLine("[yellow]4.[/] Видалити продукт за індексом");
                 AnsiConsole.MarkupLine("[orange1]5.[/] Відсортувати продукти");
-                AnsiConsole.MarkupLine("[purple]6.[/] Змінити тип контейнера (поточний: " + (products is Container ? "Масив" : "Двозв'язний список") + ")");
+                AnsiConsole.MarkupLine("[purple]6.[/] Змінити тип контейнера (поточний: " + (products.GetType().IsGenericType && products.GetType().GetGenericTypeDefinition() == typeof(Container<>) ? "Масив" : "Двозв'язний список") + ")");
                 AnsiConsole.MarkupLine("[cyan]7.[/] Пошук продукту");
                 AnsiConsole.MarkupLine("[magenta]8.[/] Редагування продукту");
                 AnsiConsole.MarkupLine("[darkorange]9.[/] Демо універсальних контейнерів");
                 AnsiConsole.MarkupLine("[darkcyan]10.[/] Зберегти контейнер у файл");
                 AnsiConsole.MarkupLine("[darkgreen]11.[/] Завантажити контейнер з файл");
                 AnsiConsole.MarkupLine("[darkred]12.[/] Очистити контейнер");
-                AnsiConsole.MarkupLine("[red]13.[/] Вийти");
+                AnsiConsole.MarkupLine("[darkmagenta]13.[/] Демонстрація делегатів (Sort/Find/FindAll)");
+                AnsiConsole.MarkupLine("[red]14.[/] Вийти");
 
                 int choice;
-                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 13)
+                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 14)
                 {
-                    AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-13[/]: ");
+                    AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-14[/]: ");
                 }
 
                 switch (choice)
@@ -79,6 +80,9 @@ namespace Лаб_4
                         AnsiConsole.MarkupLine("[green]Контейнер успішно очищено![/]");
                         break;
                     case 13:
+                        DemonstrateDelegatesAndMethods();
+                        break;
+                    case 14:
                         AnsiConsole.MarkupLine("[yellow]До побачення![/]");
                         return;
                 }
@@ -896,6 +900,122 @@ namespace Лаб_4
             products.LoadFromBinaryFile(path);
             AnsiConsole.MarkupLine("[green]Контейнер завантажено![/]");
         }
+
+        private static void DemonstrateDelegatesAndMethods()
+        {
+            if (products.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[yellow]Контейнер порожній. Додайте продукти спочатку.[/]");
+                return;
+            }
+
+            while (true)
+            {
+                AnsiConsole.MarkupLine("\n[underline green]Демонстрація роботи делегатів:[/]");
+                AnsiConsole.MarkupLine("[cyan]1.[/] Сортування за ціною");
+                AnsiConsole.MarkupLine("[magenta]2.[/] Пошук першого продукту за ціною");
+                AnsiConsole.MarkupLine("[blue]3.[/] Пошук всіх продуктів за підрядком у назві");
+                AnsiConsole.MarkupLine("[red]4.[/] Повернутися до головного меню");
+                AnsiConsole.Markup("[grey]Введіть ваш вибір (1-4): [/]");
+
+                int choice;
+                while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 4)
+                {
+                    AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-4[/]: ");
+                }
+
+                switch (choice)
+                {
+                    case 1:
+                        HandleSorting();
+                        break;
+                    case 2:
+                        HandlePriceSearch();
+                        break;
+                    case 3:
+                        HandleNameSearch();
+                        break;
+                    case 4:
+                        return;
+                }
+            }
+        }
+
+        private static void HandleSorting()
+        {
+            AnsiConsole.MarkupLine("\n[green]Оберіть напрямок сортування:[/]");
+            AnsiConsole.MarkupLine("[cyan]1.[/] За зростанням ціни");
+            AnsiConsole.MarkupLine("[magenta]2.[/] За спаданням ціни");
+            AnsiConsole.Markup("[grey]Введіть ваш вибір (1-2): [/]");
+
+            int sortChoice;
+            while (!int.TryParse(Console.ReadLine(), out sortChoice) || sortChoice < 1 || sortChoice > 2)
+            {
+                AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-2[/]: ");
+            }
+
+            products.Sort((x, y) => sortChoice == 1
+                ? x.Price.CompareTo(y.Price)
+                : y.Price.CompareTo(x.Price));
+
+            AnsiConsole.MarkupLine("[green]Відсортовані продукти:[/]");
+            RenderProductsTable(products);
+        }
+
+        private static void HandlePriceSearch()
+        {
+            AnsiConsole.MarkupLine("\n[green]Оберіть тип пошуку:[/]");
+            AnsiConsole.MarkupLine("[cyan]1.[/] Ціна більше ніж");
+            AnsiConsole.MarkupLine("[magenta]2.[/] Ціна менше ніж");
+            AnsiConsole.Markup("[grey]Введіть ваш вибір (1-2): [/]");
+
+            int searchType;
+            while (!int.TryParse(Console.ReadLine(), out searchType) || searchType < 1 || searchType > 2)
+            {
+                AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть [yellow]1-2[/]: ");
+            }
+
+            AnsiConsole.Markup("[grey]Введіть ціну для порівняння: [/]");
+            decimal price;
+            while (!decimal.TryParse(Console.ReadLine(), out price))
+            {
+                AnsiConsole.Markup("[red]Некоректне введення.[/] Будь ласка, введіть число: ");
+            }
+
+            ProductContainerBase<Product>.PredicateDelegate predicate = searchType == 1
+                        ? p => p.Price > price
+                        : p => p.Price < price;
+
+            Product found = products.Find(predicate);
+            if (found != null)
+            {
+                AnsiConsole.MarkupLine($"[green]Знайдено продукт:[/]");
+                DisplayProductDetails(found);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[yellow]Продукти за вказаними критеріями не знайдено.[/]");
+            }
+        }
+
+        private static void HandleNameSearch()
+        {
+            AnsiConsole.Markup("[grey]Введіть підрядок для пошуку в назві: [/]");
+            string substring = Console.ReadLine();
+
+            var results = products.FindAll(p => p.Name.Contains(substring, StringComparison.OrdinalIgnoreCase));
+
+            if (results.Any())
+            {
+                AnsiConsole.MarkupLine($"[green]Знайдено {results.Count()} продуктів:[/]");
+                RenderProductsTable(results);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[yellow]Продукти за вказаними критеріями не знайдено.[/]");
+            }
+        }
+
 
     }
 }

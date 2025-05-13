@@ -443,19 +443,18 @@ namespace Лаб_4
             throw new NotSupportedException($"Тип {type} не підтримується.");
         }
 
-        public override void Sort(Comparison<T> comparison)
+        public override void Sort(ComparisonDelegate comparison)
         {
-            if (comparison == null)
-                throw new ArgumentNullException(nameof(comparison), "Метод порівняння не може бути null");
+            if (count <= 1) return;
 
-            Array.Sort(items, 0, count, Comparer<T>.Create(comparison));
+            T[] itemsToSort = new T[count];
+            Array.Copy(items, itemsToSort, count);
+            Array.Sort(itemsToSort, (x, y) => comparison(x, y));
+            Array.Copy(itemsToSort, items, count);
         }
 
-        public override T Find(Func<T, bool> predicate)
+        public override T Find(PredicateDelegate predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate), "Умова пошуку не може бути null");
-
             for (int i = 0; i < count; i++)
             {
                 if (predicate(items[i]))
@@ -464,11 +463,8 @@ namespace Лаб_4
             return default(T);
         }
 
-        public override IEnumerable<T> FindAll(Func<T, bool> predicate)
+        public override IEnumerable<T> FindAll(PredicateDelegate predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate), "Умова пошуку не може бути null");
-
             for (int i = 0; i < count; i++)
             {
                 if (predicate(items[i]))
