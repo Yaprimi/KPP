@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="IDZ.AstrophysicsMagazine">
+    <Position X="5.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AstrophysicsMagazine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.Biography">
+    <Position X="14.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Biography.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.Book">
+    <Position X="13.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEiAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Book.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.FashionMagazine">
+    <Position X="3.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>FashionMagazine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.FictionBook">
+    <Position X="11.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAIAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>FictionBook.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.GlossyMagazine">
+    <Position X="2.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAACAAAIA=</HashCode>
+      <FileName>GlossyMagazine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.Magazine">
+    <Position X="4.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAECAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Magazine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.MedicalMagazine">
+    <Position X="8" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MedicalMagazine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.NonFictionBook">
+    <Position X="15.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAABAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>NonFictionBook.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.Novel">
+    <Position X="12.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Novel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.Product">
+    <Position X="8.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAIAAAAQAAAAQEAAAAAAQAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Product.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="IDZ.ScienceMagazine">
+    <Position X="6.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAABAAAAAAAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>ScienceMagazine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.ShortStoryCollection">
+    <Position X="10.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ShortStoryCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.Textbook">
+    <Position X="17" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Textbook.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IDZ.TravelMagazine">
+    <Position X="1.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TravelMagazine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
