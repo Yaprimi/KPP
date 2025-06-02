@@ -19,12 +19,10 @@ namespace IDZ
             {
                 AnsiConsole.MarkupLine("\n[green]Головне меню:[/]");
 
-                // Категорія: Додавання продуктів
                 AnsiConsole.MarkupLine("[bold underline yellow] Додавання продуктів:[/]");
                 AnsiConsole.MarkupLine("[cyan]1.[/] Додати продукт");
                 AnsiConsole.MarkupLine("[magenta]2.[/] Згенерувати випадкові продукти");
 
-                // Категорія: Перегляд та редагування
                 AnsiConsole.MarkupLine("\n[bold underline blue] Перегляд та редагування:[/]");
                 AnsiConsole.MarkupLine("[blue]3.[/] Переглянути всі продукти");
                 AnsiConsole.MarkupLine("[yellow]4.[/] Видалити продукт за індексом");
@@ -32,29 +30,24 @@ namespace IDZ
                 AnsiConsole.MarkupLine("[cyan]6.[/] Пошук продукту");
                 AnsiConsole.MarkupLine("[magenta]7.[/] Редагування продукту");
 
-                // Категорія: Управління контейнером
                 AnsiConsole.MarkupLine("\n[bold underline purple] Управління контейнером:[/]");
                 AnsiConsole.MarkupLine("[purple]8.[/] Змінити тип контейнера (поточний: " + (products.GetType().IsGenericType && products.GetType().GetGenericTypeDefinition() == typeof(Container<>) ? "Масив" : "Двозв'язний список") + ")");
                 AnsiConsole.MarkupLine("[darkred]9.[/] Очистити контейнер");
                 AnsiConsole.MarkupLine("[darkcyan]10.[/] Показати загальну вартість товарів");
 
-                // Категорія: Робота з файлами
                 AnsiConsole.MarkupLine("\n[bold underline darkcyan] Робота з файлами:[/]");
                 AnsiConsole.MarkupLine("[darkcyan]11.[/] Зберегти контейнер у файл");
                 AnsiConsole.MarkupLine("[darkgreen]12.[/] Завантажити контейнер з файл");
                 AnsiConsole.MarkupLine("[darkcyan]13.[/] Зберегти контейнер у текстовий файл");
 
-                // Категорія: Демонстраційні функції
                 AnsiConsole.MarkupLine("\n[bold underline darkorange] Демонстраційні функції:[/]");
                 AnsiConsole.MarkupLine("[darkorange]14.[/] Демо універсальних контейнерів");
                 AnsiConsole.MarkupLine("[darkmagenta]15.[/] Демонстрація делегатів (Sort/Find/FindAll)");
 
-                // Категорія: Аналітика
                 AnsiConsole.MarkupLine("\n[bold underline darkgreen] Аналітика:[/]");
                 AnsiConsole.MarkupLine("[darkcyan]16.[/] LINQ: Найдешевший та найдорожчий товар");
                 AnsiConsole.MarkupLine("[darkgreen]17.[/] LINQ: Середня вартість за категоріями");
 
-                // Категорія: Вихід
                 AnsiConsole.MarkupLine("\n[bold underline red] Вихід:[/]");
                 AnsiConsole.MarkupLine("[red]18.[/] Вийти");
 
